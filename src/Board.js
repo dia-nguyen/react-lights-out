@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 import "./Board.css";
+import isWithinBounds from "./helper";
 
 /** Game board of Lights out.
  *
@@ -44,6 +45,7 @@ function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.5 }) {
 
   function hasWon() {
     // TODO: check the board in state to determine whether the player has won.
+    return board.every((row) => row.every((cell) => cell === false));
   }
 
   function flipCellsAround(coord) {
@@ -62,17 +64,18 @@ function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.5 }) {
       const boardCopy = JSON.parse(JSON.stringify(oldBoard));
 
       // TODO: in the copy, flip this cell and the cells around it
-      flipCell(y, x, boardCopy);
-      (isWithinBounds) && flipCell(y, x - 1, boardCopy);
-      y - 1 <= nrows && flipCell(y, x + 1, boardCopy);
-      y - 1 <= ncols && flipCell(y - 1 , x, boardCopy);
-      y + 1 <= ncols && flipCell(y + 1 , x, boardCopy);
+      flipCell(y, x, boardCopy); // clicked cell
+      isWithinBounds(x - 1, nrows) && flipCell(y, x - 1, boardCopy); // left
+      isWithinBounds(x + 1, nrows) && flipCell(y, x + 1, boardCopy); // right
+      isWithinBounds(y - 1, ncols) && flipCell(y - 1, x, boardCopy); // top
+      isWithinBounds(y + 1, ncols) && flipCell(y + 1, x, boardCopy); // bottom
 
       // TODO: return the copy
       return boardCopy;
     });
   }
 
+  // make html version of the current board state
   const htmlBoard = [];
 
   for (let y = 0; y < nrows; y++) {
@@ -88,13 +91,10 @@ function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.5 }) {
     }
     htmlBoard.push(<tr>{row}</tr>);
   }
+
   // if the game is won, just show a winning msg & render nothing else
-
-  // TODO: make board
-
-  // make table board
-  return <table>{htmlBoard}</table>;
-  // TODO
+  // otherwise, render the  table board
+  return hasWon() ? <p>You won!</p> : <table>{htmlBoard}</table>;
 }
 
 export default Board;
