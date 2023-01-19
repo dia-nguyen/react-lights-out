@@ -63,15 +63,10 @@ function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.5 }) {
 
       // TODO: in the copy, flip this cell and the cells around it
       flipCell(y, x, boardCopy);
-      // (isWithinBounds) && flipCell(y, x - 1, boardCopy);
-      // y - 1 <= nrows && flipCell(y, x + 1, boardCopy);
-      // x - 1 <= ncols && flipCell(y - 1 , x, boardCopy);
-      // x - 1 <= ncols && flipCell(y - 2 , x, boardCopy);
-
-      flipCell(y, x - 1, boardCopy)
-      flipCell(y, x + 1, boardCopy)
-      flipCell(y-1, x, boardCopy)
-      flipCell(y+1, x, boardCopy)
+      (isWithinBounds) && flipCell(y, x - 1, boardCopy);
+      y - 1 <= nrows && flipCell(y, x + 1, boardCopy);
+      y - 1 <= ncols && flipCell(y - 1 , x, boardCopy);
+      y + 1 <= ncols && flipCell(y + 1 , x, boardCopy);
 
       // TODO: return the copy
       return boardCopy;
